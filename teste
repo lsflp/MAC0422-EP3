@@ -1,0 +1,4 @@
+carrega ../testes/trace.txt
+espaco 1
+substitui 1
+executa 5
