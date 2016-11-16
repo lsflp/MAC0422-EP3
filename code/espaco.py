@@ -27,6 +27,23 @@ class Espaco(object):
                     self.marcador[j:j+tamanho] = [True] * tamanho
                     self.contador = j+tamanho
                     return j;
+        # Best Fit
+        elif self.tipo == 3:
+            zeros = []
+            count = 0
+            index = -1
+            for i in range(self.marcador):
+                if self.marcador[i]:
+                    if index != -1:
+                        zeros.append([count, index])
+                    count = 0
+                    index = -1
+                else:
+                    if count == 0:
+                        index = i
+                    count += 1;
+            print(zeros)
+
      
         # nao encontrou espaco
         return -1
