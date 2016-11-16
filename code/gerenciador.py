@@ -54,7 +54,6 @@ def executa(intervalo):
         if (time % 4):
             gerenciador_memoria.setR ()
 
-        print("\n-----", time)
         retirar = [] # elementos que devem ser retirados da lsita (processos finalizados)
         for p in processos:
             if time in p.times:
@@ -71,5 +70,8 @@ def executa(intervalo):
 
         for i in retirar:
             processos.remove(i)
+
+        if time % int(intervalo) == 0:
+            print("\n-> Tempo: ", time)
+            print (gerenciador_memoria)
         time += 1
-        print (gerenciador_memoria)

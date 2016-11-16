@@ -18,7 +18,7 @@ class Espaco(object):
             for i in range(self.tamanho - tamanho + 1):
                 if sum(self.marcador[i:i+tamanho]) == 0:
                     self.marcador[i:i+tamanho] = [True] * tamanho
-                    return i;
+                    return i
         # Next Fit
         elif self.tipo == 2:
             for i in range(self.tamanho - tamanho + 1):
@@ -26,24 +26,60 @@ class Espaco(object):
                 if sum(self.marcador[j:j+tamanho]) == 0:
                     self.marcador[j:j+tamanho] = [True] * tamanho
                     self.contador = j+tamanho
-                    return j;
+                    return j
         # Best Fit
         elif self.tipo == 3:
-            zeros = []
+            zeros_index = []
+            zeros_size = []
             count = 0
             index = -1
-            for i in range(self.marcador):
-                if self.marcador[i]:
-                    if index != -1:
-                        zeros.append([count, index])
+            for i in range(self.tamanho):
+                if self.marcador[i] == True:
+                    if index != -1 and count >= tamanho:
+                        zeros_index.append(index)
+                        zeros_size.append(count)
                     count = 0
                     index = -1
                 else:
                     if count == 0:
                         index = i
                     count += 1;
-            print(zeros)
+            if index != -1 and count >= tamanho:
+                zeros_index.append(index)
+                zeros_size.append(count)
 
+            if len(zeros_size) > 0:
+                menor = min(zeros_size)
+                index = zeros_index[zeros_size.index(menor)]
+                self.marcador[index:index+tamanho] = [True] * tamanho
+                return index
+
+        # Worst Fit
+        elif self.tipo == 4:
+            zeros_index = []
+            zeros_size = []
+            count = 0
+            index = -1
+            for i in range(self.tamanho):
+                if self.marcador[i] == True:
+                    if index != -1:
+                        zeros_index.append(index)
+                        zeros_size.append(count)
+                    count = 0
+                    index = -1
+                else:
+                    if count == 0:
+                        index = i
+                    count += 1;
+            if index != -1:
+                zeros_index.append(index)
+                zeros_size.append(count)
+
+            if len(zeros_size) > 0:
+                menor = max(zeros_size)
+                index = zeros_index[zeros_size.index(menor)]
+                self.marcador[index:index+tamanho] = [True] * tamanho
+                return index
      
         # nao encontrou espaco
         return -1
