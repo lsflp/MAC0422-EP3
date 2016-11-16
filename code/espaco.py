@@ -19,9 +19,10 @@ class Espaco(object):
                 if sum(self.marcador[i:i+tamanho]) == 0:
                     self.marcador[i:i+tamanho] = [True] * tamanho
                     return i;
+        # Next Fit
         elif self.tipo == 2:
             for i in range(self.tamanho - tamanho + 1):
-                j = (i + self.contador) % (self.tamanho - tamanho)
+                j = (i + self.contador) % (self.tamanho - tamanho + 1)
                 if sum(self.marcador[j:j+tamanho]) == 0:
                     self.marcador[j:j+tamanho] = [True] * tamanho
                     self.contador = j+tamanho

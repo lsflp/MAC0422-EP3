@@ -1,4 +1,7 @@
+import os, struct
+
 vir, men = [], []
+
 
 def gen_init(virtual, total):
     global vir, men
@@ -9,14 +12,24 @@ def gen_init(virtual, total):
     men = open('./tmp/ep3.men', 'wb+')
 
     # Cria arquivos de memória
-    with vir as vir_file:
-        data = struct.pack("i", -1) * virtual
-        vir_file.write(data)
-        vir_file.flush()
+    data = struct.pack("i", -1) * virtual
+    vir.write(data)
+    vir.flush()
 
-    with men as men_file:
-        data = struct.pack("i", -1) * total
-        men_file.write(data)
-        men_file.flush()
+    data = struct.pack("i", -1) * total
+    men.write(data)
+    men.flush()
 
-def marca(pid, file, bloco, quantidade_blocos)
+def marca_vir (pid, ini, size):
+    global vir, men
+    vir.seek(int(ini)) # inteiro de 4 bytes
+    data = struct.pack("i", pid) * int(size)
+    vir.write(data)
+    vir.flush()
+
+def marca_men (pid, ini, size):
+    global vir, men
+    men.seek(int(ini)) # inteiro de 4 bytes
+    data = struct.pack("i", pid) * int(size)
+    men.write(data)
+    men.flush()

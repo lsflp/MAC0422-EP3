@@ -2,6 +2,7 @@ import struct, os
 from substitui import Substitui
 from process import Processo
 
+
 total, virtual, s, p = 0, 0, 0, 0
 espaco_num = 0
 substitui_num = 0
@@ -50,6 +51,8 @@ def executa(intervalo):
     # Entre nesse laço até que todos os processos tenham terminado, executa em 1 em 1 segundo
     time  = 0;
     while len(processos) > 0:
+        if (time % 4):
+            gerenciador_memoria.setR ()
 
         print("\n-----", time)
         retirar = [] # elementos que devem ser retirados da lsita (processos finalizados)
@@ -59,7 +62,6 @@ def executa(intervalo):
                 posicao_memoria = p.positions[indice]
                 # acessa
                 status = gerenciador_memoria.acesso(p, posicao_memoria, time)
-                print (status)
                 if status == -1:
                     return;
 
@@ -70,3 +72,4 @@ def executa(intervalo):
         for i in retirar:
             processos.remove(i)
         time += 1
+        print (gerenciador_memoria)
