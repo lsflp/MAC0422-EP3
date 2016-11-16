@@ -1,26 +1,11 @@
 import struct, os
 from substitui import Substitui
+from process import Processo
 
 total, virtual, s, p = 0, 0, 0, 0
 espaco_num = 0
 substitui_num = 0
 processos = []
-
-class Processo(object):
-
-    # recebe uma linha que descreve o processo e o pid
-    def __init__(self, info_string, pid):
-        data = info_string.split()
-        self.pid = pid
-        self.name = data[1]
-        self.t0 = int(data[0])
-        del data[0]
-        del data[0]
-        self.positions = [int(i) for i in data[1::2]]
-        self.times = [int(i) for i in data[0::2]]
-
-    def __repr__(self):
-        return self.name + " (" + str(self.pid) + ")"
 
 def read_file(file):
     pid = 0
@@ -46,6 +31,8 @@ def substitui(num):
     substitui_num = int(num)
 
 def executa(intervalo):
+    global total, virtual, s, p, processos
+
     if virtual == 0 or total == 0:
         print ("Carregar arquivo antes!")
         return
@@ -63,15 +50,21 @@ def executa(intervalo):
     # Entre nesse laço até que todos os processos tenham terminado, executa em 1 em 1 segundo
     time  = 0;
     while len(processos) > 0:
+
+        print("\n-----", time)
         retirar = [] # elementos que devem ser retirados da lsita (processos finalizados)
         for p in processos:
             if time in p.times:
                 indice = p.times.index(time)
                 posicao_memoria = p.positions[indice]
                 # acessa
-                gerenciador_memoria(p, time, posicao_memoria)
+                status = gerenciador_memoria.acesso(p, posicao_memoria, time)
+                print (status)
+                if status == -1:
+                    return;
 
-            if max(p.times) <= time:
+            if max(p.times) < time:
+                gerenciador_memoria.free(p)
                 retirar.append(p)
 
         for i in retirar:

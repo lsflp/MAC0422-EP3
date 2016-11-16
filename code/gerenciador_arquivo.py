@@ -1,7 +1,7 @@
 vir, men = [], []
 
 def gen_init(virtual, total):
-
+    global vir, men
     if not os.path.exists('./tmp'):
         os.mkdir('./tmp')
 
@@ -18,3 +18,5 @@ def gen_init(virtual, total):
         data = struct.pack("i", -1) * total
         men_file.write(data)
         men_file.flush()
+
+def marca(pid, file, bloco, quantidade_blocos)

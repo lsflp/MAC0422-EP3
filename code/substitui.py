@@ -1,44 +1,71 @@
+from espaco import Espaco
+from process import Processo
+
 class Pagina(object):
-    def __init__(self, pid, size, ini):
-        self.local = 0 # 1 virtual 0 fisica
-        self.pid = pid # processo
-        self.ini = ini # o numero inicial, multiplo de p
-        self.size = size # tamanho da pagina, p
-        self.R = R # contador de referencias
+    def __init__(self, processo, ini):
+        self.local = 0 # 0 virtual 1 fisica
+        self.processo = processo # processo
+        self.ini = ini # o numero inicial, multiplo de p (o numero que o processo enxerga)
+        self.R = 0 # contador de referencias
         self.next_ref = 0 # qunado sera a proxima referencia, usado para o Optimal
+        self.local_men = None # ende esta na memoria (posicao real de inicio)
 
 class Substitui(object):
-    
+
     def __init__(self, total, virtual, s, p, subs, espaco): 
         self.total = total
         self.virtual = virtual
         self.s = s
         self.p = p
         self.subs = subs
-        self.espaco = espaco
 
-    def pegar_pagina (self, processo, posicao):
+        self.fisica = Espaco(espaco, total/s)
+        self.virtual = Espaco(espaco, virtual/s)
 
-        if tamanho < 1:
-            return -1
+        self.paginas = []
 
-        # First Fit
-        if self.tipo == 1:
-            for i in range(self.tamanho - tamanho + 1):
-                if sum(self.marcador[i:i+tamanho]) == 0:
-                    self.marcador[i:i+tamanho] = [True] * tamanho
-                    return i;
-        elif self.tipo == 2:
-            for i in range(self.tamanho - tamanho + 1):
-                j = (i + self.contador) % (self.tamanho - tamanho)
-                if sum(self.marcador[j:j+tamanho]) == 0:
-                    self.marcador[j:j+tamanho] = [True] * tamanho
-                    self.contador = j+tamanho
-                    return j;
+    def acesso (self, processo, posicao, tempo):
+        # verifica se essa uma pagina para esse acesso
+        pagina = None
+        ini = int(posicao)/int(self.s)
+        mult_ps = self.p/self.s
 
+        for page in self.paginas:
+            if page.ini == ini and page.processo.pid == processo.pid:
+                pagina = page
+        if pagina == None:
+            pagina = Pagina(processo, ini)
+            self.paginas.append(pagina)
+            status = self.virtual.pegar_livre(mult_ps)
+            if status == -1:
+                print("FUDEU, não cabe na memória virtual!")
+                return -1
+            else:
+                pagina.local_men = status
+
+        if pagina.local == 0: # se nao estiver na memoria virtual vamos coloca-la
+
+            status = self.fisica.pegar_livre(mult_ps)
+            if status == -1:
+                print("page fault")
                 
-        # nao encontrou espaco
-        return -1
+                return 0;
+            else:
+                pagina.local = 1
+                self.virtual.liberar(pagina.local_men, mult_ps)
+                pagina.local_men = status
+        return status
 
-    def liberar (self, posicao, tamanho):
-        self.marcador[posicao:posicao+tamanho] = [False] * tamanho
+    def free (self, processo):
+        deletar = []
+        mult_ps = self.p/self.s
+        for page in self.paginas:
+            if page.processo.pid == processo.pid:
+                deletar.append(page)
+
+        for d in deletar:
+            if d.local == 0:
+                self.virtual.liberar(d.local_men, mult_ps)
+            elif d.local == 1:
+                self.fisica.liberar(d.local_men, mult_ps)
+            self.paginas.remove(d)
