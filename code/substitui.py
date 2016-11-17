@@ -1,24 +1,48 @@
+################################################################################
+#  Nomes: Gabriel Capella                                   Números USP: 8962078 
+#         Luís Felipe de Melo Costa Silva                                9297961
+#  
+#  Arquivo parte do EP3 de MAC0422
+################################################################################
+
 from espaco import Espaco
 from process import Processo
 from gerenciador_arquivo import *
 
-class Pagina(object):
-    def __init__(self, processo, ini):
-        self.local = 0 # 0 virtual 1 fisica
-        self.processo = processo # processo
-        self.ini = ini # o numero inicial, multiplo de p (o numero que o processo enxerga)
-        self.R = 0 # contador de referencias
-        self.next_ref = 0 # qunado sera a proxima referencia, usado para o Optimal
-        self.local_men = None # ende esta na memoria (posicao real de inicio)
-        self.contador = 0 # momento em que a pagina foi chamada pela ultima vez
+# Implementam funções que trabalham com as páginas e os algoritmos de 
+# substituição de página. Depende dos arquivos espaco.py, process.py e 
+# gerenciador_arquivo.py
 
+# Objeto Página.
+class Pagina(object):
+    # Inicializando
+    def __init__(self, processo, ini):
+        # 0 para virtual e 1 para física.
+        self.local = 0 
+        # Processo.
+        self.processo = processo 
+        # O número inicial, múltiplo de p (o número que o processo enxerga).
+        self.ini = ini 
+        # Contador de referências (bit R).
+        self.R = 0 
+        # Quando será a próxima referência, usado para o Optimal.
+        self.next_ref = 0 
+        # Onde está na memória (posição real de início).
+        self.local_men = None 
+        # Momento em que a página foi chamada pela última vez.
+        self.contador = 0 
+
+    # Representação
     def __repr__(self):
         res = str(self.local_men)+ " (R:" + str(self.R) + ", C:"+str(self.contador)+")"
         return  res
 
+# Objeto usado para as substituições de páginas.
 class Substitui(object):
 
+    # Representação
     def __repr__(self):
+        # Para impressão
         res = "Memória Física (bitmap)\n"
         for i in range(len(self.fisica.marcador)):
             if self.fisica.marcador[i]:
@@ -39,6 +63,7 @@ class Substitui(object):
 
         return  res
 
+    # Inicializando
     def __init__(self, total, virtual, s, p, subs, espaco): 
         self.total = total
         self.virtual = virtual
@@ -53,6 +78,7 @@ class Substitui(object):
 
         gen_init(virtual, total)
 
+    # Função que libera um processo, o apagando da lista de processos.
     def free (self, processo):
         deletar = []
         mult_ps = self.p/self.s
@@ -67,7 +93,7 @@ class Substitui(object):
                 self.fisica.liberar(d.local_men, mult_ps)
             self.paginas.remove(d)
 
-    # set o bit R para 0 em todas as páginas
+    # Configura o bit R para 0 em todas as páginas
     def setR (self):
         for page in self.paginas:
             page.R = 0;
@@ -75,9 +101,11 @@ class Substitui(object):
             page.contador += int('10000000', 2)
             page.contador &= int('11111111', 2) # define contador de 8 bits
 
-    # retorna o elemento que tem que ser retirado
+    # Devolve o elemento que tem que ser retirado (Implementação dos algoritmos
+    # de substituição)
     def page_fault (self, tempo):
-        # otimo, procura o elemente que esta mais longe de ser utilizado na memoria fisica
+        
+        # 1) Optimal
         if self.subs == 1:
             diff_tempo = 0
             pagina_retirada = None
@@ -90,7 +118,7 @@ class Substitui(object):
                                 pagina_retirada = page
             return pagina_retirada
 
-        # segund chance
+        # 2) Second-chance
         elif self.subs == 2:
             while(True):
                 page = next(page for page in self.paginas if page.local == 1)
@@ -101,7 +129,7 @@ class Substitui(object):
                     self.paginas.remove(page)
                     self.paginas.append(page)
 
-        # Clock
+        # 3) Clock
         elif self.subs == 3:
             size = len(self.paginas)
             i = 0
@@ -114,7 +142,7 @@ class Substitui(object):
                         page.R = 0
                 i = (i+1)%size
 
-        # Least Recently Used (Quarta versao)
+        # 4) Least Recently Used (Quarta versão)
         elif self.subs == 4:
             tmp = sorted(self.paginas, key=lambda page: page.contador)
             for page in tmp:
@@ -123,8 +151,9 @@ class Substitui(object):
 
         return -1
 
+    # Faz o acesso a uma página.
     def acesso (self, processo, posicao, tempo):
-        # verifica se essa uma pagina para esse acesso
+        # Verifica se há uma pagina para esse acesso
         pagina = None
         ini = int(posicao)/int(self.s)
         mult_ps = self.p/self.s
@@ -138,20 +167,19 @@ class Substitui(object):
             status = self.virtual.pegar_livre(mult_ps)
             marca_vir (pagina.processo.pid, status*4*self.p, mult_ps * self.s)
             if status == -1:
-                print("FUDEU, não cabe na memória virtual!")
+                print("Ñão há espaço na memória virtual!")
                 return -1
             else:
                 pagina.local_men = status
 
         pagina.R = 1
 
-        if pagina.local == 0: # se nao estiver na memoria virtual vamos coloca-la
+         # Se não estiver na memória virtual vamos coloca-la.
+        if pagina.local == 0:
 
             status = self.fisica.pegar_livre(mult_ps)
             if status == -1:
-                #print("page fault")
                 remove = self.page_fault (tempo)
-                #print ("retirando ", remove)
                 if remove == None:
                     print(self.fisica)
 

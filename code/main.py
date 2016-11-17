@@ -1,29 +1,40 @@
+################################################################################
+#  Nomes: Gabriel Capella                                   Números USP: 8962078 
+#         Luís Felipe de Melo Costa Silva                                9297961
+#  
+#  Arquivo parte do EP3 de MAC0422
+################################################################################
+
 import cmd
 from gerenciador import *
 
+# Este arquivo implementa o console, usando a biblioteca cmd, do Python e 
+# depende do arquivo gerenciador.py
+
 class console(cmd.Cmd):
-    """Simple command processor example."""
-    prompt = '> '
+    # String impressa a cada vez que o usuário deve entrar com comandos.
+    prompt = '(ep3): '
     
+    # Carrega o arquivo de trace.
     def do_carrega(self, line):
-        """carrega  <arquivo> - carrega o arquivo """
         read_file(line)
 
+    # Recebe o número do gerenciador de espaço livre.
     def do_espaco(self, line):
-        """espaco <num> - informa o gerenciador de estaco live, onde nun: 1 First Fit ;2 Next Fit ;3 Best Fit ;4 Worst Fit"""
         espaco(line)
 
+    # Informa o algoritmo de substituição de páginas.
     def do_substitui(self, line):
-        """substitui <num> - algoritmo de substituicao, onde nun: 1 Optimal; 2 Second-Chance; 3 Clock; 4 Least Recently Used"""
         substitui(line)
 
+    # Executa os processos definidos no arquivo de trace com o gerenciador de
+    # espaço livre e o algoritmo de substituição de páginas escolhidos pelo 
+    # usuário.
     def do_executa(self, line):
-        """executa <intervalo>"""
         executa(line)
     
+    # Sai do console e volta pro terminal do shell.
     def do_sai(self, line):
-        """sai - finaliza o programa"""
-        print ()
         return True
     do_EOF = do_sai
 
