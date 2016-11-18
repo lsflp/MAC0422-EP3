@@ -1,0 +1,24 @@
+Nomes: Gabriel Capella                                      Números USP: 8962078 
+       Luís Felipe de Melo Costa Silva                                   9297961
+
+ARQUIVO LEIAME
+
+O código do EP3 está na página /code. Para acessá-la:
+    $ cd code
+
+Ele foi desenvolvido em Python, por isso, não precisa de compilação. Para
+executar:
+    $ python3 ep3.py 
+
+O console será aberto, e os seguintes comandos são implementados:
+
+    (ep3): carrega <nome>, onde <nome> é um arquivo.
+    (ep3): espaco <num>, onde <num> é um inteiro de 1 a 4.
+    (ep3): substitui <num>, onde <num> é um inteiro de 1 a 4.
+    (ep3): executa <num>, onde <num> é um intervalo de tempo.
+    (ep3): sai, termina o console.
+
+Para implementar o console utilizamos a biblioteca cmd. Caso ela não esteja 
+instalada, basta instalar:
+
+    $ pip install cmd
