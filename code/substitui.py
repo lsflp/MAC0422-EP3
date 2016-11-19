@@ -186,18 +186,21 @@ class Substitui(object):
                     print(self.fisica)
 
                 remove.local = 0
+
+                # libera memorial virtual e fisica para realizar troca
                 self.fisica.liberar(remove.local_men, mult_ps)
+                self.virtual.liberar(pagina.local_men, mult_ps)
+
                 remove.local_men = status
                 status = self.virtual.pegar_livre(mult_ps)
                 if status == -1:
                     print("Não há espaço na memória virtual!")
                     return -1
-                    
+
                 marca_vir (pagina.processo.pid, status*4*self.p, mult_ps * self.s)
                 remove.local_men = status
 
                 pagina.local = 1
-                self.virtual.liberar(pagina.local_men, mult_ps)
                 status = self.fisica.pegar_livre(mult_ps)
                 marca_men (pagina.processo.pid, status*4*self.p, mult_ps * self.s)
                 pagina.local_men = status 
