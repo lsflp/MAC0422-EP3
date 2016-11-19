@@ -1,4 +1,4 @@
-carrega ../testes/trace3.txt
+carrega ../testes/trace2.txt
 espaco 4
 substitui 2
 executa 5
