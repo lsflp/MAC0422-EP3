@@ -111,6 +111,8 @@ class Substitui(object):
             pagina_retirada = None
             for page in self.paginas:
                 if page.local == 1:
+                    if min(page.processo.times) < tempo:
+                        return page
                     for time in page.processo.times:
                         if time > tempo:
                             if time - tempo > diff_tempo:
@@ -167,7 +169,7 @@ class Substitui(object):
             status = self.virtual.pegar_livre(mult_ps)
             marca_vir (pagina.processo.pid, status*4*self.p, mult_ps * self.s)
             if status == -1:
-                print("Ñão há espaço na memória virtual!")
+                print("Não há espaço na memória virtual!")
                 return -1
             else:
                 pagina.local_men = status
@@ -187,6 +189,10 @@ class Substitui(object):
                 self.fisica.liberar(remove.local_men, mult_ps)
                 remove.local_men = status
                 status = self.virtual.pegar_livre(mult_ps)
+                if status == -1:
+                    print("Não há espaço na memória virtual!")
+                    return -1
+                    
                 marca_vir (pagina.processo.pid, status*4*self.p, mult_ps * self.s)
                 remove.local_men = status
 
