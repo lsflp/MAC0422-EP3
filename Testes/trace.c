@@ -3,11 +3,11 @@
 #include <time.h>
 
 int main () {
-    int total = 64, virtual = 128, s = 4, p = 4;
+    int total = 64, virtual = 4096, s = 4, p = 4;
     int i, j, linhas, n, pi, ti, t0, tf, b;
     printf("%d %d %d %d\n", total, virtual, s, p);
     srand((unsigned)time(NULL));
-    linhas = 100;                                  // número de processos (entre 1 e 100)
+    linhas = 200;                                  // número de processos (entre 1 e 100)
     t0 = 1;                                        // tempo inicial (entre 1 e 5)
     for (i = 0; i < linhas; i++) {
         tf = 1 + (rand()%10) + t0;                 // delta t + t0 (No máximo 10 seg de execução)

@@ -1,0 +1,34 @@
+RESULTADOS
+
+Nº DE PAGE FAULTS: (espaco 1 fixado)
+
+OPTIMAL:         374
+SECOND-CHANCE:   372
+CLOCK:           374
+LRU:             381
+
+TEMPO PRA ENCONTRAR ESPAÇO LIVRE (substitui 1 fixado)
+
+FIRST
+> t.m
+[1] 0.1531049
+> t.v
+[1] 2.780894e-05
+
+NEXT
+> t.m
+[1] 0.1000248
+> t.v
+[1] 0.0001895559
+
+BEST
+> t.m
+[1] 0.2010095
+> t.v
+[1] 3.301399e-05
+
+WORST
+> t.m
+[1] 0.2473311
+> t.v
+[1] 0.001902462
