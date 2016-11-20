@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 ################################################################################
 #  Nomes: Gabriel Capella                                   Números USP: 8962078 
 #         Luis Felipe de Melo Costa Silva                                9297961
@@ -35,6 +36,7 @@ class console(cmd.Cmd):
     
     # Sai do console e volta pro terminal do shell.
     def do_sai(self, line):
+        print("")
         return True
     do_EOF = do_sai
 
