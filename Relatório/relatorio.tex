@@ -192,8 +192,8 @@ IME-USP\\ % Your institution for the title page
 	\framesubtitle{substitui.py}
 	\begin{itemize}
 		\item Nesse módulo temos uma lista de unidades de alocação.
-		\item Quando um processo solicita acesso a alguma posição da memória $x$, calculamos $\left \lceil{\frac{x}{s}}\right \rceil$ para descobrir a página que o processo quer acessar.
-		\item Exemplo: Seja $x = 82$ e $s = 4$, $\left \lceil{\frac{x}{s}}\right \rceil = 20$. 
+		\item Quando um processo solicita acesso a alguma posição da memória $x$, calculamos $\left \lfloor{\frac{x}{s}}\right \rfloor$ para descobrir a página que o processo quer acessar.
+		\item Exemplo: Seja $x = 82$ e $s = 4$, $\left \lfloor{\frac{x}{s}}\right \rfloor = 20$. 
 		\item Usando o exemplo, procuramos se alguma unidade de alocação já apresenta a página 20 e seja desse processo.
 		\item Se existir uma unidade que satisfaça o requisito, tentamos passá-la para a memória física.
 		\item Se não existir, a criamos na memória virtual e então tentamos passá-la para a memória física.
@@ -325,8 +325,9 @@ IME-USP\\ % Your institution for the title page
 			\item Best Fit: 0.2010095 s - [0.198864, 0.203155].
 			\item Worst Fit: 0.2473311 s - [0.2310442, 0.2636181].
 		\end{enumerate}
-		\item ALGORITMO: MÉDIA DE TEMPO - INTERVALO DE EXECUÇÃO
+		\item ALGORITMO: MÉDIA DE TEMPO - INTERVALO DE CONFIANÇA
 		\item Não compensava medir cada acesso à memória, por isso calculamos o tempo de execução inteiro.
+		\item Alterar o algoritmo de substituição de página não altera o tempo de execução do programa de maneira significativa. Os tempos ficaram bem parecidos quando mudamos os algoritmos.
 	\end{itemize}
 \end{frame}
 
