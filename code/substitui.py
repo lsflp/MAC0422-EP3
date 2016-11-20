@@ -61,6 +61,7 @@ class Substitui(object):
             if (i+1) % 64 == 0:
                 res += "\n"
 
+        res += "\n\nPage Faults: "+str(self.faults)+"\n"
         return  res
 
     # Inicializando
@@ -75,6 +76,10 @@ class Substitui(object):
         self.virtual = Espaco(espaco, virtual/s)
 
         self.paginas = []
+
+        # contador de pages faults
+        self.faults = 0
+
 
         gen_init(virtual, total)
 
@@ -104,7 +109,8 @@ class Substitui(object):
     # Devolve o elemento que tem que ser retirado (Implementação dos algoritmos
     # de substituição)
     def page_fault (self, tempo):
-        
+        self.faults += 1
+
         # 1) Optimal
         if self.subs == 1:
             diff_tempo = 0
