@@ -79,6 +79,7 @@ def executa(intervalo):
     # a cada "segundo".
     time  = 0;
     while len(processos) > 0:
+        # definimos o intervalo de atualizacao de R em 4 em 4 segundos
         if (time % 4):
             gerenciador_memoria.setR ()
 

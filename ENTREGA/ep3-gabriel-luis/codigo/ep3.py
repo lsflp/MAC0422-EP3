@@ -42,4 +42,3 @@ class console(cmd.Cmd):
 
 if __name__ == '__main__':
     console().cmdloop()
-    

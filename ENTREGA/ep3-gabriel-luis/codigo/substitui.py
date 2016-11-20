@@ -169,6 +169,7 @@ class Substitui(object):
         for page in self.paginas:
             if page.ini == ini and page.processo.pid == processo.pid:
                 pagina = page
+                break
         if pagina == None:
             pagina = Pagina(processo, ini)
             self.paginas.append(pagina)
