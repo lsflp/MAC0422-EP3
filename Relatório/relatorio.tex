@@ -81,6 +81,7 @@
 \usepackage{graphicx} % Allows including images
 \usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
 \usepackage{courier}
+
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
@@ -134,7 +135,7 @@ IME-USP\\ % Your institution for the title page
 \begin{frame}
 	\frametitle{Implementação}
 	\begin{itemize}
-		\item A linguagem escolhida foi Python, que é orientada a objetos e de script, sendo, portanto, multiparadigma.
+		\item A linguagem escolhida foi Python (versão 3.5.2 - \texttt{python3}), que é orientada a objetos e é uma linguagem de script ao mesmo tempo.
 		\item Isso facilitou bastante a leitura do arquivo de trace, no armazenamento das informações, na alocação e desalocação da memória utilizada na execução do programa e no tratamento dos objetos durante os trabalhos.
 	\end{itemize}
 \end{frame}
@@ -188,6 +189,19 @@ IME-USP\\ % Your institution for the title page
 
 \begin{frame}
 	\frametitle{Módulos}
+	\framesubtitle{substitui.py}
+	\begin{itemize}
+		\item Nesse módulo temos uma lista de unidades de alocação.
+		\item Quando um processo solicita acesso a alguma posição da memória $x$, calculamos $\left \lceil{\frac{x}{s}}\right \rceil$ para descobrir a página que o processo quer acessar.
+		\item Exemplo: Seja $x = 82$ e $s = 4$, $\left \lceil{\frac{x}{s}}\right \rceil = 20$. 
+		\item Usando o exemplo, procuramos se alguma unidade de alocação já apresenta a página 20 e seja desse processo.
+		\item Se existir uma unidade que satisfaça o requisito, tentamos passá-la para a memória física.
+		\item Se não existir, a criamos na memória virtual e então tentamos passá-la para a memória física.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Módulos}
 	\framesubtitle{process.py}
 	\begin{itemize}
 		\item Possui a definição do objeto \texttt{process}, que armazena as seguintes informações:
@@ -212,6 +226,7 @@ IME-USP\\ % Your institution for the title page
 			\item Escreve em \texttt{/tmp/ep3.men}.
 			\item Escreve em \texttt{/tmp/ep3.vir}
 		\end{itemize}
+		\item \textbf{Debug}: Para ver o que os arquivos representam, basta executar o comando \texttt{od -i -v tmp/ep3.men} ou \texttt{od -i -v tmp/ep3.vir} 
 	\end{itemize}
 \end{frame}
 
@@ -223,8 +238,9 @@ IME-USP\\ % Your institution for the title page
 		\item Basicamente, possui duas funções:
 		\begin{itemize}
 			\item Devolver um endereço de espaço (usando o algoritmo escolhido).
-			\item Liberar um espaço de memória que não será maus usado.
+			\item Liberar um espaço de memória que não será mais usado.
 		\end{itemize}
+		\item Tanto a memória física quanto a virtual implementadas utilizam esse módulo.
 	\end{itemize}
 \end{frame}
 
@@ -244,10 +260,10 @@ IME-USP\\ % Your institution for the title page
 \begin{frame}
 	\frametitle{Saída}
 	\begin{itemize}
-		\item Para a entrada anterior, temos a seguinte saída:
+		\item A imagem abaixo é um exemplo de saída:
 		\begin{figure}[!h]
 			\centering
-			\includegraphics[scale=0.5]{b.png}
+			\includegraphics[scale=0.4]{b.png}
 		\end{figure}		
 	\end{itemize}
 \end{frame}
@@ -258,7 +274,67 @@ IME-USP\\ % Your institution for the title page
 		\item No arquivo de trace foi definido que a memória física teria tamanho 64, a virtual, 1024, e que o tamanho das páginas (s e p) seria 4.
 		\item Podemos ver então, no bitmap da memória física, 16 bits (64/4) e no da virtual, 256 (1024/4).
 		\item 0 é para posição livre e 1 é para posição ocupada.
+		\item Depois disso é mostrado o número de Page Faults do início da execução até o momento exibido.
 	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Testes}
+	\begin{itemize}
+		\item Fizemos dois tipos de teste: Número de Page Faults (para comparar os algoritmos de substituição de página) e Tempo de execução (para comparar os algoritmos de gerenciamento de espaço livre).
+		\item Para testar, fizemos um script em Python que substitui o módulo ep3.py, e apenas chamava as funções de gerenciador.py com os argumentos necessários, pela quantidade de vezes que fossem precisas.
+		\item O número de Page Faults não varia em repetidas execuções, pois os algoritmos são determinísticos.
+		\item O tempo de execução varia, pois mesmo que os algoritmos sejam previsíveis, o computador de uso geral mostra variações quando rodamos os comandos.
+		\item O arquivo de trace tinha 100 processos que eram simulados em uma memória física de tamanho 64, tamanho virtual 2048, s e p iguais a 4. Cada processo durava no máximo tempo 15.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Testes}
+	\framesubtitle{Page Faults}
+	\begin{itemize}
+		\item Estes testes foram executados uma vez.
+		\item Para testar os diferentes algoritmos de forma justa, fixamos um algoritmo de gerenciamento de espaço livre. No caso, todos foram executados com o First Fit.
+		\item Os resultados foram: (legenda para o gráfico a seguir)
+		\begin{enumerate}
+			\item Optimal: 374 page faults.
+			\item Second-Chance: 372 page faults.
+			\item Clock: 374 page faults.
+			\item LRU: 381 page faults.
+		\end{enumerate}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\begin{figure}[!h]
+		\centering
+		\includegraphics[scale=0.4]{c.png}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Testes}
+	\framesubtitle{Tempo de execução}
+	\begin{itemize}
+		\item Estes testes foram executados trinta vezes.
+		\item Para testar os diferentes algoritmos de forma justa, fixamos um algoritmo de substituição de página. No caso, todos foram executados com o Optimal.
+		\item Os resultados foram: (legenda para o gráfico a seguir)
+		\begin{enumerate}
+			\item First Fit: 0.1531049 s - [0.1511358, 0.1550740].
+			\item Next Fit: 0.1000248 s - [0.09488377, 0.10516583].
+			\item Best Fit: 0.2010095 s - [0.198864, 0.203155].
+			\item Worst Fit: 0.2473311 s - [0.2310442, 0.2636181].
+		\end{enumerate}
+		\item ALGORITMO: MÉDIA DE TEMPO - INTERVALO DE EXECUÇÃO
+		\item Não compensava medir cada acesso à memória, por isso calculamos o tempo de execução inteiro.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\begin{figure}[!h]
+		\centering
+		\includegraphics[scale=0.4]{d.png}
+	\end{figure}
 \end{frame}
 
 \end{document} 
