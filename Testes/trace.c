@@ -7,9 +7,9 @@ int main () {
     int i, j, linhas, n, pi, ti, t0, tf, b;
     printf("%d %d %d %d\n", total, virtual, s, p);
     srand((unsigned)time(NULL));
-    linhas = 1+(rand()%100);                       // número de processos (entre 1 e 100)
+    linhas = 100;                                  // número de processos (entre 1 e 100)
+    t0 = 1;                                        // tempo inicial (entre 1 e 5)
     for (i = 0; i < linhas; i++) {
-        t0 = 1 + (rand()%5);                       // tempo inicial (entre 1 e 5)
         tf = 1 + (rand()%10) + t0;                 // delta t + t0 (No máximo 10 seg de execução)
         b = 64 + (rand()%64);                      // total de memória usado (entre 64 e 128)
         printf("%d proc%d %d %d ", t0, i, tf, b);
@@ -21,6 +21,8 @@ int main () {
                 printf("%d %d ", pi, ti);          // Mexe em uma pelo menos.
         }
         printf("\n");
+        if (rand() > (0.5*RAND_MAX))
+            t0++;
     }
     return 0;
 }
