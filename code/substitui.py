@@ -167,12 +167,13 @@ class Substitui(object):
             pagina = Pagina(processo, ini)
             self.paginas.append(pagina)
             status = self.virtual.pegar_livre(mult_ps)
-            marca_vir (pagina.processo.pid, status*4*self.p, mult_ps * self.s)
             if status == -1:
                 print("Não há espaço na memória virtual!")
                 return -1
             else:
                 pagina.local_men = status
+            marca_vir (pagina.processo.pid, status*4*self.s, mult_ps * self.s)
+
 
         pagina.R = 1
 
@@ -197,18 +198,18 @@ class Substitui(object):
                     print("Não há espaço na memória virtual!")
                     return -1
 
-                marca_vir (pagina.processo.pid, status*4*self.p, mult_ps * self.s)
+                marca_vir (pagina.processo.pid, status*4*self.s, mult_ps * self.s)
                 remove.local_men = status
 
                 pagina.local = 1
                 status = self.fisica.pegar_livre(mult_ps)
-                marca_men (pagina.processo.pid, status*4*self.p, mult_ps * self.s)
+                marca_men (pagina.processo.pid, status*4*self.s, mult_ps * self.s)
                 pagina.local_men = status 
 
             else:
                 pagina.local = 1
                 self.virtual.liberar(pagina.local_men, mult_ps)
-                marca_men (pagina.processo.pid, status*4*self.p, mult_ps * self.s)
+                marca_men (pagina.processo.pid, status*4*self.s, mult_ps * self.s)
                 pagina.local_men = status
 
         return pagina.local_men

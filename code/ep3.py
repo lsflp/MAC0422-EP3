@@ -1,6 +1,6 @@
 ################################################################################
 #  Nomes: Gabriel Capella                                   Números USP: 8962078 
-#         Luís Felipe de Melo Costa Silva                                9297961
+#         Luis Felipe de Melo Costa Silva                                9297961
 #  
 #  Arquivo parte do EP3 de MAC0422
 ################################################################################
