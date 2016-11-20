@@ -1,4 +1,4 @@
-carrega ../testes/trace3.txt
-espaco 4
-substitui 2
+carrega ../leo
+espaco 1
+substitui 4
 executa 1
